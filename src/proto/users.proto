@@ -1,0 +1,32 @@
+// protoのバージョンの宣言
+syntax = "proto3";
+
+// protoファイルから自動生成させるGoのコードの置き先
+option go_package = "pkg/grpc";
+
+// packageの宣言
+package users;
+
+// サービスの定義
+service UsersService {
+	rpc getUser (UserRequest) returns (UserResponse); 
+    rpc getUsers (UsersRequest) returns (UsersResponse); 
+}
+
+// 型の定義
+message UserRequest {
+	string id = 1;
+}
+
+// 型の定義
+message UsersRequest {}
+
+message UserResponse {
+	string id = 1;
+    string user_name = 2;
+    string email = 3;
+}
+
+message UsersResponse {
+    repeated UserResponse UserList=1;
+}
