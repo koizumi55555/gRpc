@@ -1,0 +1,134 @@
+linters-settings:
+  # デフォルト
+  errcheck:
+    # 型アサーションエラーチェックをしていない箇所を検出
+    check-type-assertions: true
+    # _ にエラーを割り当てている箇所を検出
+    check-blank: true
+  govet:
+    # ローカルスコープ内での変数シャドウイングをチェックするかどうかを設定
+    check-shadowing: true
+    # インポートされたパッケージ内での変数シャドウイングをチェックするかどうかを設定
+    check-shadowing-imported: true
+    # printfファミリの関数のフォーマット文字列に関するエラーをチェックするかどうかを設定
+    printf: true
+    # 構造体のタグが正しい形式であるかどうかをチェックするかどうかを設定
+    structtags: true
+  staticcheck:
+    # ST1000は、定数式が常に真または常に偽である場合に発生する不要な条件分岐を検出するチェックは除外
+    checks: "all,-ST1000"
+  # appendix
+  asasalint:
+    # exclude:
+    #  - Append
+    #  - \.Wrapf
+    # 以下のデフォルトの除外対象を有効化
+    # Default: ["^(fmt|log|logger|t|)\.(Print|Fprint|Sprint|Fatal|Panic|Error|Warn|Warning|Info|Debug|Log)(|f|ln)$"]
+    use-builtin-exclusions: true
+    # *_test.go ファイルを除外
+    ignore-test: true
+  goconst:
+    min-len: 2
+    min-occurrences: 3
+  gocyclo:
+    min-complexity: 15
+  goimports:
+    local-prefixes: github.com/golangci/golangci-lint
+  gofmt:
+    simplify: false
+  # gosimpleに無視したいルールを設定する場合に以下のような記述で対応できます
+  # gosimple:
+  #   checks: ["all", "-S1000", "-S1034"]
+  tagliatelle:
+    case:
+      # Use the struct field name to check the name of the struct tag.
+      # Default: false
+      use-field-name: true
+      # `camel` is used for `json` and `yaml`, and `header` is used for `header` (can be overridden)
+      # Default: {}
+      rules:
+        # Any struct tag type can be used.
+        # Support string case: `camel`, `pascal`, `kebab`, `snake`, `goCamel`, `goPascal`, `goKebab`, `goSnake`, `upper`, `lower`, `header`
+        json: snake
+        yaml: snake
+  whitespace:
+    auto-fix: true
+
+linters:
+  disable-all: true
+  enable:
+    # default
+    - errcheck
+    - gosimple
+    - govet
+    - staticcheck
+    - typecheck
+    - unused
+    # appendix
+    - asasalint
+    - asciicheck
+    - bidichk
+    - bodyclose
+    - containedctx
+    - contextcheck
+    - dupword
+    - durationcheck
+    - errname
+    - errorlint
+    - exhaustive
+    - exportloopref
+    - forcetypeassert
+    # - gci # ioのimportでエラーとなるためlint非対称とする
+    - goconst
+    # - gocyclo # ロジック修正が必要なため要テストコード
+    - gofmt
+    - gosec
+    - loggercheck
+    - nakedret
+    # - nestif # ロジック修正が必要なため要テストコード
+    - nilerr
+    - nilnil
+    - noctx
+    - nolintlint
+    - nonamedreturns
+    - nosprintfhostport
+    - prealloc
+    - predeclared
+    - reassign
+    - tagliatelle
+    - tenv
+    - thelper
+    - tparallel
+    - unconvert
+    - unparam
+    - wastedassign
+    - whitespace
+    - lll
+
+issues:
+  # Excluding configuration per-path, per-linter, per-text and per-source
+  exclude-rules:
+    - path: _test\.go # テストファイルに対して適応しないlinterを設定します
+      linters:
+        - staticcheck
+        - asasalint
+        - gocyclo
+        - errcheck
+        - tagliatelle
+        - govet
+        - unparam
+        - gosec
+        - lll
+
+run:
+  go: 1.20.3
+  timeout: 5m
+  # linterを適応しないファイルを設定します
+  skip-files:
+    - "internal/usecase/integration_repo/smarthr/model/*"
+    - "internal/usecase/integration_repo/google/model/*"
+    - "internal/usecase/integration_repo/microsoft/model/*"
+
+  # linterを適応しないディレクトリを設定します
+  # skip-dirs:
+  #   - pkg/testutil

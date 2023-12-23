@@ -106,3 +106,7 @@ run-grpc-client:
 run-corpration-api:
 	go run cmd/app/main.go
 .PHONY: run-corpration-api
+
+lint:
+	golangci-lint run --fix
+.PHONY: lint
